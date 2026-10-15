@@ -1,0 +1,13 @@
+Test ID,Category,Question,Expected result,Pass (Y/N),Notes
+T01,JHA definition,What is a Job Hazard Analysis (JHA)?,Accurate definition; cite JHA PDF pages 7-8,,
+T02,Exact list,What are the five criteria for selecting jobs to be analyzed using a JHA?,All five criteria in source order; cite JHA PDF page 9,,
+T03,Steps,What are the steps involved in conducting a JHA?,All five initial steps with citations to JHA PDF pages 10-11,,
+T04,Hazard identification,What questions should be asked to identify workplace hazards during a JHA?,Exactly the five questions from JHA PDF page 12; no unrelated lists,,
+T05,Hazard controls,How should hazards identified during a JHA be corrected or prevented?,Supported control guidance; include employee discussion and relevant conditions,,
+T06,Review timing,Why should a JHA be reviewed and when should it be reviewed?,Reasons and timing supported by JHA PDF,,
+T07,Construction safety,What are the seven core elements of safety and health programs in construction?,All seven elements in source order; cite construction PDF page 11,,
+T08,Hierarchy of controls,What are the five levels in the hierarchy of controls?,All five levels in source order; cite construction PDF page 38,,
+T09,Cross-document,How do the OSHA documents describe identifying hazards and deciding which hazards to control first?,Only supported material from both documents; cite each relevant page,,
+T10,Unsupported safety detail,What is the safest operating speed for an industrial press machine?,Abstain; do not guess a speed,,
+T11,Out of scope,Who won the most recent Cricket World Cup?,Do not fabricate an answer from OSHA documents; state out of scope or abstain,,
+T12,Citation check,What does the JHA booklet say about reviewing a JHA after an injury or illness?,Accurate claim and correct citation to the supporting page,,
