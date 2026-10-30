@@ -1,181 +1,110 @@
-# 🦺 OSHA Safety Assistant — Local RAG Chatbot
+# OSHA Advanced Local RAG
 
-A local Retrieval-Augmented Generation (RAG) application that answers questions from two OSHA publications:
+A local retrieval-augmented question-answering application over exactly two indexed OSHA PDFs:
 
 - `OSHA_3071_Job_Hazard_Analysis.pdf`
 - `OSHA_3886_Construction_Safety.pdf`
 
-The application uses local embeddings, a persistent vector database, and a local language model. It returns answers grounded in retrieved document passages and includes source filename/PDF page citations.
+Stack: Python, ChromaDB, Ollama, `nomic-embed-text`, `llama3.2`, and Streamlit.
 
-> **Safety note:** This is a document Q&A and learning project, not a substitute for official OSHA standards, site-specific procedures, or a qualified safety professional. Verify safety-critical answers against the original publication and applicable regulations.
+## Current capabilities
 
-## Features
+- Persistent ChromaDB retrieval; evaluation and chat do **not** ingest or rebuild the database.
+- Intent-aware source/page routing for known source-grounded question types.
+- Hybrid retrieval combining semantic search and IDF-weighted lexical relevance.
+- Deterministic, domain-aware query expansion with a configurable toggle.
+- Optional local Ollama reranking of the hybrid candidate shortlist, with deterministic fallback if the reranker errors or returns invalid JSON.
+- Configurable top-k values, context size, reranking, and relevance thresholds.
+- Source/page citations and a final citation guard that rejects citations absent from retrieved context.
+- Conservative abstention for unsupported, hazard-specific questions.
+- Streamlit and terminal interfaces share the same retrieval and answer pipeline.
+- File logging to `logs/rag.log`.
+- Regression tests and a benchmark evaluation script with retrieval, citation, abstention, latency, and optional local LLM-judge diagnostics.
 
-- Extracts text from PDFs and preserves source filename and PDF page metadata.
-- Splits document text into chunks for retrieval.
-- Creates local embeddings with Ollama `nomic-embed-text`.
-- Stores and searches chunks in ChromaDB.
-- Uses semantic retrieval plus keyword matching.
-- Generates answers locally with Ollama `llama3.2`.
-- Displays source citations in answers and a Streamlit chat interface.
-- Includes targeted handlers for selected frequently tested JHA lists.
-- Abstains for selected unsupported machinery questions.
+## Setup
 
-## Architecture
+Use Python 3.11 or 3.12 if possible, then activate your existing virtual environment. Install dependencies only if needed:
 
-```text
-OSHA PDF files
-    |
-    v
-PyMuPDF text extraction
-    |
-    v
-Recursive text chunking
-    |
-    v
-Ollama embedding model: nomic-embed-text
-    |
-    v
-ChromaDB persistent collection: osha_documents
-    |
-    v
-User question -> query embedding + keyword matching
-    |
-    v
-Relevant chunks/pages assembled as context
-    |
-    v
-Ollama LLM: llama3.2
-    |
-    v
-Answer with source citations (or safe abstention)
-    |
-    v
-Streamlit chat interface
+```powershell
+pip install -r requirements.txt
 ```
 
-## Technology stack
-
-- Python
-- Streamlit
-- Ollama
-- `nomic-embed-text` embeddings
-- `llama3.2` language model
-- ChromaDB
-- PyMuPDF
-- LangChain text splitters
-
-## Project structure
-
-```text
-osha-rag/
-├── data/
-│   ├── OSHA_3071_Job_Hazard_Analysis.pdf
-│   └── OSHA_3886_Construction_Safety.pdf
-├── chroma_db/                 # Generated local vector database; do not commit
-├── .venv/                     # Python virtual environment; do not commit
-├── app.py                     # Streamlit interface
-├── chat.py                    # Terminal chatbot
-├── ingest.py                  # PDF ingestion and indexing
-├── requirements.txt
-├── .gitignore
-└── README.md
-```
-
-## Prerequisites
-
-1. Python installed.
-2. Ollama installed and running.
-3. The two OSHA PDFs placed in the `data/` folder.
-4. Models downloaded locally:
+Ensure Ollama is running and these models are installed:
 
 ```powershell
 ollama pull nomic-embed-text
 ollama pull llama3.2
 ```
 
-## Setup on Windows PowerShell
+The optional local reranker uses `RAG_RERANK_MODEL`, defaulting to `llama3.2`, so no extra model is required.
 
-Open PowerShell in the project directory.
+## Run the application
 
-```powershell
-python -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install --upgrade pip
-pip install -r requirements.txt
-```
-
-If PowerShell blocks virtual environment activation, you can run the venv's Python directly with `.\.venv\Scripts\python.exe`.
-
-Index the PDFs:
-
-```powershell
-python ingest.py
-```
-
-Start the terminal chatbot:
-
-```powershell
-python chat.py
-```
-
-Or start the web interface:
+Streamlit UI:
 
 ```powershell
 streamlit run app.py
 ```
 
-Streamlit usually serves the app at `http://localhost:8501`.
+Terminal UI:
 
-## Example questions
+```powershell
+python chat.py
+```
 
-- What is a Job Hazard Analysis (JHA)?
-- What are the five criteria for selecting jobs to be analyzed using a JHA?
-- What questions should be asked to identify workplace hazards during a JHA?
-- How should hazards identified during a JHA be corrected or prevented?
-- What are the seven core elements of safety and health programs in construction?
-- What are the five levels in the hierarchy of controls?
-- What is the safest operating speed for an industrial press machine?
+## Tests and evaluation
 
-The final question should be refused when the indexed documents do not establish a safe speed for the specific machine.
+```powershell
+python -m unittest -v test_chat.py
+python evaluate_rag.py
+python evaluate_rag.py --llm-judge
 
-## Evaluation
+# Run the 100-question real-world draft benchmark (80 development questions)
+python evaluate_rag.py --benchmark real_world_eval.json --split development
 
-The project has been manually tested on selected questions, including:
+# Final check on the separate 20-question holdout set
+python evaluate_rag.py --benchmark real_world_eval.json --split holdout
+```
 
-- JHA definition and steps.
-- Five criteria for selecting JHA jobs.
-- Hazard-identification questions.
-- JHA hazard-correction guidance.
-- Seven core elements of construction safety programs.
-- Five levels in the hierarchy of controls.
-- Abstention for an unsupported industrial press speed.
+The local LLM judge is a diagnostic, not ground truth. Review its flagged claims manually. Expand the benchmark with manually verified expected pages as new query patterns are introduced.
 
-These are selected functional checks, not a comprehensive accuracy guarantee. Use the evaluation checklist to record further results. Check that each citation points to a page that actually supports the associated claim.
+## Runtime safeguards and diagnostics
 
-## Known limitations
+Ollama model calls now have configurable timeouts so a stalled local model can fall back
+instead of blocking a request indefinitely. Reranker failures/timeouts fall back to the
+existing hybrid ranking; no safety threshold is automatically lowered.
 
-- Retrieval can include related but unnecessary passages.
-- Citation formatting and answer completeness should be checked for new question types.
-- Some common questions use targeted handlers; not every question has a deterministic answer.
-- Scanned PDFs with no extractable text may require OCR.
-- The local model can still make mistakes. Do not use this application as the sole basis for safety-critical decisions.
-- The app requires Ollama and the local models to be available.
+```powershell
+$env:RAG_OLLAMA_TIMEOUT_SECONDS="30"
+$env:RAG_RERANK_TIMEOUT_SECONDS="12"
+$env:RAG_LOG_LEVEL="INFO"
+```
 
-## Privacy
+The log now records targeted/general retrieval duration and reranker duration/fallback.
+Inspect `logs/rag.log` when a query is unexpectedly slow or abstains. Benchmark page labels
+should be manually audited before interpreting retrieval precision/recall as correctness.
 
-The intended workflow runs embeddings and generation locally through Ollama. Keep the PDFs and local database out of public repositories unless you have confirmed the documents' redistribution terms.
+## Configuration
 
-## Future improvements
+Copy `.env.example` as a reference. The application reads OS environment variables directly; it does not automatically parse a `.env` file. For a one-session PowerShell configuration, for example:
 
-- Automated retrieval and answer evaluation.
-- Better reranking and relevance thresholds.
-- Unit tests for citation extraction and deterministic handlers.
-- Source cards with page references.
-- Better out-of-scope question detection.
-- Optional OCR for scanned documents.
-- Packaging and deployment documentation.
+```powershell
+$env:RAG_RERANKER_ENABLED = "true"
+$env:RAG_QUERY_EXPANSION_ENABLED = "true"
+$env:RAG_MIN_KEYWORD_RELEVANCE = "0.20"
+$env:RAG_MIN_COMBINED_RELEVANCE = "0.0"
+```
 
-## License
+Tune thresholds only after reviewing benchmark regressions. Higher thresholds can reduce irrelevant chunks but may also exclude relevant paraphrased passages. Local reranking can improve ordering but adds latency; if the reranker fails, hybrid scores are used instead.
 
-Add a license only after deciding what license applies to your original code and confirming the rights and terms for any bundled source documents. Do not redistribute OSHA PDFs without checking their applicable terms.
+## Important constraints
+
+- Keep the existing `chroma_db` folder.
+- Do **not** run `ingest.py` as part of tests or evaluation.
+- Do not add extra documents without explicitly changing the project scope.
+- PDF page references in citations refer to the page metadata indexed in ChromaDB, not necessarily the printed page number in the PDF.
+- A good benchmark score does not guarantee that every answer is correct. Safety-related answers require source verification.
+
+## Evaluation outputs
+
+`evaluate_rag.py` writes `evaluation_results.csv` and `evaluation_results.json` into the project directory. These are generated results and are overwritten by subsequent runs.
