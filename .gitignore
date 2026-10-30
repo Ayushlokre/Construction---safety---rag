@@ -6,3 +6,7 @@ chroma_db/
 .streamlit/secrets.toml
 .DS_Store
 Thumbs.db
+chroma_db_docker_api/
+chroma_db_docker_ui/
+logs/
+construction_site_safety_test.pdf

@@ -1,0 +1,51 @@
+
+[
+  {
+    "id": "JHA-01",
+    "question": "What hazards can occur when handling castings in the metal shop?",
+    "expected_source": "OSHA_3071_Job_Hazard_Analysis.pdf",
+    "expected_terms": ["sharp burrs", "lacerations", "foot", "castings"]
+  },
+  {
+    "id": "JHA-02",
+    "question": "What controls are recommended for handling castings with sharp edges?",
+    "expected_source": "OSHA_3071_Job_Hazard_Analysis.pdf",
+    "expected_terms": ["clamp", "cut-resistant gloves", "good grip"]
+  },
+  {
+    "id": "JHA-03",
+    "question": "What is the hazard in the rotating-pulley example?",
+    "expected_source": "OSHA_3071_Job_Hazard_Analysis.pdf",
+    "expected_terms": ["rotating pulley", "hand", "fingers"]
+  },
+  {
+    "id": "JHA-04",
+    "question": "What are the three job steps for grinding iron castings?",
+    "expected_source": "OSHA_3071_Job_Hazard_Analysis.pdf",
+    "expected_terms": ["metal box", "grind off burr", "finished casting"]
+  },
+  {
+    "id": "JHA-05",
+    "question": "What hierarchy of hazard correction does the JHA document describe?",
+    "expected_source": "OSHA_3071_Job_Hazard_Analysis.pdf",
+    "expected_terms": ["engineering controls", "administrative controls"]
+  },
+  {
+    "id": "CON-01",
+    "question": "What are the seven core elements of a construction safety and health program?",
+    "expected_source": "OSHA_3886_Construction_Safety.pdf",
+    "expected_terms": ["management leadership", "worker participation", "hazard identification", "education and training"]
+  },
+  {
+    "id": "CON-02",
+    "question": "What does the construction guide say about hazard identification and assessment?",
+    "expected_source": "OSHA_3886_Construction_Safety.pdf",
+    "expected_terms": ["hazard identification", "assessment"]
+  },
+  {
+    "id": "CON-03",
+    "question": "What does the guide recommend for preventing and controlling workplace hazards?",
+    "expected_source": "OSHA_3886_Construction_Safety.pdf",
+    "expected_terms": ["hazard prevention", "control"]
+  }
+]

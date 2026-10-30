@@ -1,0 +1,1521 @@
+{
+  "dataset_name": "OSHA RAG Real-World Evaluation Draft",
+  "version": "1.0",
+  "created_for": "Development and evaluation of a RAG system over two local OSHA PDFs",
+  "corpus": [
+    "OSHA_3071_Job_Hazard_Analysis.pdf",
+    "OSHA_3886_Construction_Safety.pdf"
+  ],
+  "case_count": 100,
+  "split_counts": {
+    "development": 80,
+    "holdout": 20
+  },
+  "ground_truth_status": "Draft labels derived from PDF content/page structure and intended to be manually reviewed before being treated as gold-standard ground truth. Holdout questions should not be used for tuning until final evaluation.",
+  "notes": [
+    "PDF page numbers are physical PDF page metadata, not necessarily printed booklet page numbers.",
+    "Unsupported questions are intentionally outside the two-document corpus or require site-specific/current/expert information not present in it.",
+    "This benchmark does not certify safety, legal compliance, or production readiness.",
+    "Expected pages are candidate relevant evidence pages; multi-page answers may need additional pages after manual review."
+  ],
+  "cases": [
+    {
+      "id": "rw_001",
+      "question": "A new supervisor asks what a job hazard analysis is meant to accomplish.",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          7
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          8
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "jha_basics",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_002",
+      "question": "Explain the difference between identifying a hazard and analyzing the job that creates exposure to it.",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          7
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          12
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          13
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "jha_basics",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_003",
+      "question": "Why should a company review work tasks before an injury happens?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          8
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "jha_basics",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_004",
+      "question": "Which jobs should be prioritized for a JHA if time is limited?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          9
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          11
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "jha_planning",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_005",
+      "question": "How should workers be involved when preparing a job hazard analysis?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          10
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "worker_participation",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_006",
+      "question": "A task has never caused an accident, but one mistake could cause severe injury. Should it still be prioritized?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          9
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "jha_planning",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_007",
+      "question": "What should a supervisor do before breaking a job into steps for analysis?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          10
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          11
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "jha_planning",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_008",
+      "question": "What five questions help identify workplace hazards during a JHA?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          12
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "hazard_identification",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_009",
+      "question": "How can near-misses help a team estimate whether a hazard may recur?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          13
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          14
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "risk_assessment",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_010",
+      "question": "What details should be documented when describing a hazard scenario?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          12
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          13
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          14
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "risk_assessment",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_011",
+      "question": "A worker reaches near a rotating pulley while clearing a snag. What kind of hazard scenario does the JHA booklet describe?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          13
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          14
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "risk_assessment",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_012",
+      "question": "What controls are suggested for a casting that could fall onto a worker’s foot?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          15
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "casting_case",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_013",
+      "question": "What is the injury risk from handling a heavy casting, according to the example JHA?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          15
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "casting_case",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_014",
+      "question": "How does the booklet recommend reducing laceration risk from sharp casting burrs?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          16
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "casting_case",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_015",
+      "question": "What ergonomic risk is associated with repeatedly lifting castings from the floor?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          17
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "casting_case",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_016",
+      "question": "What changes to the work layout are suggested to reduce strain when handling castings?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          17
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "casting_case",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_017",
+      "question": "Which types of controls are described as most effective for preventing hazards?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          18
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "hazard_controls",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_018",
+      "question": "How should a team decide which control methods to use after identifying hazards?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          18
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "hazard_controls",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_019",
+      "question": "Why should a JHA be reviewed after work conditions or procedures change?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          19
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "jha_review",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_020",
+      "question": "When might an employer need professional help conducting a JHA?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          20
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "jha_planning",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_021",
+      "question": "What kinds of assistance does OSHA describe for improving workplace safety and health programs?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          21
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          22
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          23
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "osha_assistance",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_022",
+      "question": "Under what circumstance can a consultation project refer an unresolved serious hazard to enforcement?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          24
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "osha_assistance",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_023",
+      "question": "What are the three levels of VPP recognition?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          25
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "osha_programs",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_024",
+      "question": "How does OSHA evaluate whether a VPP site is operating as described?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          26
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "osha_programs",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_025",
+      "question": "What are the broad benefits of cooperative partnerships for worker safety?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          27
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "osha_programs",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_026",
+      "question": "Where can a reader find additional hazard-control measures in the JHA booklet?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          6
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          41
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "document_navigation",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_027",
+      "question": "What does the JHA glossary mean by a safety data sheet?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          40
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "definitions",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_028",
+      "question": "What are the core elements of the recommended construction safety and health practices?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          11
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "construction_program",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_029",
+      "question": "What is the purpose of management leadership in a construction safety program?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          13
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          14
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "management_leadership",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_030",
+      "question": "How should management set goals for a construction safety and health program?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          14
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "management_leadership",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_031",
+      "question": "How can workers be encouraged to take part in site safety decisions?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          15
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          16
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "worker_participation",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_032",
+      "question": "Why should workers have access to safety and health information?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          17
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "worker_participation",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_033",
+      "question": "What workplace conditions can discourage workers from reporting hazards?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          18
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "worker_participation",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_034",
+      "question": "What makes hazard identification particularly important on fast-moving construction projects?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          19
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "hazard_identification",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_035",
+      "question": "What records and reference materials can help identify construction hazards?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          20
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "hazard_identification",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_036",
+      "question": "What should a site team inspect when checking mobile construction equipment and vehicles?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          21
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "inspections",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_037",
+      "question": "How can a construction site manage traffic and material deliveries more safely?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          21
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "traffic_management",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_038",
+      "question": "What biological hazards should construction workers consider during hazard identification?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          22
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "hazard_identification",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_039",
+      "question": "Which work activities can create ergonomic risk factors on a construction site?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          22
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "ergonomics",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_040",
+      "question": "Why should emergency and nonroutine work be included in hazard planning?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          23
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "nonroutine_work",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_041",
+      "question": "What should an effective hazard prevention and control process achieve?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          24
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "hazard_controls",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_042",
+      "question": "What factors should employers consider when selecting controls?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          25
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "hazard_controls",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_043",
+      "question": "How can sequencing trades reduce exposure to hazards on a shared site?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          25
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "multiemployer",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_044",
+      "question": "What should a hazard control plan cover for emergencies and unusual tasks?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          26
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "emergency_planning",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_045",
+      "question": "How can a team confirm that installed controls continue to work?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          27
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "control_verification",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_046",
+      "question": "Why is worker education and training important beyond simply telling people about hazards?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          28
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "training",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_047",
+      "question": "What should workers be taught about reporting hazards, injuries, and near misses?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          29
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          30
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "training",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_048",
+      "question": "How often should a construction safety program be evaluated?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          31
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "program_evaluation",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_049",
+      "question": "What are examples of leading indicators for safety program performance?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          32
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "program_evaluation",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_050",
+      "question": "What should an employer do when an evaluation identifies a program shortcoming?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          33
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "program_evaluation",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_051",
+      "question": "Why do contractors and subcontractors need to coordinate safety activities on the same worksite?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          34
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          35
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "multiemployer",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_052",
+      "question": "What information should general contractors share with other employers at a multiemployer site?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          35
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          36
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "multiemployer",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_053",
+      "question": "What does effective communication between contractors help workers understand?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          35
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          36
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "multiemployer",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_054",
+      "question": "How should contractors coordinate scheduling and resolve safety conflicts?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          37
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "multiemployer",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_055",
+      "question": "A crew is about to do a task that rarely occurs. What does the construction guide say about planning for it?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          23
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          26
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "nonroutine_work",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_056",
+      "question": "What should be done after a control is installed to ensure it remains effective?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          27
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "control_verification",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_057",
+      "question": "What are examples of records that may reveal recurring site hazards?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          20
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "hazard_identification",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_058",
+      "question": "How can safety program goals be made useful to supervisors and workers?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          14
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "management_leadership",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_059",
+      "question": "What does meaningful worker participation require from management?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          15
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          16
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          18
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "worker_participation",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_060",
+      "question": "How does the construction guide connect training with hazard reporting?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          28
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          29
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          30
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "training",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_061",
+      "question": "What does the construction guide say about controlling hazards before relying on less reliable measures?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          24
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          25
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "hazard_controls",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_062",
+      "question": "What types of hazards can arise from changing construction schedules and sequences?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          19
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          23
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "hazard_identification",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_063",
+      "question": "How can inspection checklists support construction hazard identification?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          21
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "inspections",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_064",
+      "question": "What is the role of preventive maintenance in verifying controls?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          27
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "control_verification",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_065",
+      "question": "What responsibilities do employers have when a safety program evaluation reveals a weakness?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          31
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          33
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "program_evaluation",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_066",
+      "question": "How should a general contractor help ensure all site workers know about hazards and controls?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          35
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          36
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "multiemployer",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_067",
+      "question": "What is the purpose of a safety data sheet in communicating chemical hazards?",
+      "expected_pages": [
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          20
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          39
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          40
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "chemical_information",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_068",
+      "question": "How do the two OSHA publications differ in their main focus?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          7
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          8
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          6
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          11
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "cross_document",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_069",
+      "question": "A supervisor wants a repeatable way to analyze one risky task and also improve site-wide safety management. Which document topics are relevant?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          9
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          10
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          12
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          11
+        ],
+        [
+          "OSHA_3886_Construction_Safety.pdf",
+          19
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "cross_document",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_070",
+      "question": "What should a JHA team do with the hazards it identifies before deciding on controls?",
+      "expected_pages": [
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          12
+        ],
+        [
+          "OSHA_3071_Job_Hazard_Analysis.pdf",
+          18
+        ]
+      ],
+      "should_abstain": false,
+      "must_contain": [],
+      "category": "hazard_controls",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_071",
+      "question": "What exact lockout/tagout sequence applies to a hydraulic press model XJ-400?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "machine_specific",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_072",
+      "question": "Which respirator cartridge is required for xylene at 50 ppm?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "respirator_selection",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_073",
+      "question": "What is the permissible exposure limit for benzene under the latest OSHA standard?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "regulatory_lookup",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_074",
+      "question": "What exact torque must be applied to this crane’s critical fasteners?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "equipment_specification",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_075",
+      "question": "Is this particular scaffold safe to use right now based on a photo I have not provided?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "missing_evidence",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_076",
+      "question": "What is the required minimum anchor strength for my specific fall-arrest setup?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "specific_engineering",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_077",
+      "question": "Give me the complete lockout procedure for a 480-volt electrical panel in our plant.",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "electrical_safety",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_078",
+      "question": "Which chemical gloves are compatible with a proprietary solvent called ZX-91?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "chemical_ppe",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_079",
+      "question": "What is the exact safe distance from this live power line for my crane model?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "specific_engineering",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_080",
+      "question": "Can I legally operate this machine without its guard in Maharashtra today?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "legal_current",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_081",
+      "question": "What is the current OSHA fine amount for a serious violation issued this week?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "current_regulation",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_082",
+      "question": "What dose of a chemical exposure would cause permanent injury?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "medical_hazard",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_083",
+      "question": "Tell me whether the air in my worksite is safe based only on the site name.",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "missing_evidence",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_084",
+      "question": "What is the exact welding procedure for this unknown alloy and thickness?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "technical_procedure",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_085",
+      "question": "Which fire extinguisher model is certified for the chemicals stored in our unlisted warehouse?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "missing_evidence",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_086",
+      "question": "What is the approved rescue plan for a confined space at our facility?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "site_specific_plan",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_087",
+      "question": "Does OSHA require a specific brand of safety helmet for every construction worker?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "unsupported_brand",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_088",
+      "question": "What is the exact legal deadline for submitting our incident report in this jurisdiction?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "legal_current",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_089",
+      "question": "Which respirator should I wear for an unknown mixture of gases?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "respirator_selection",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_090",
+      "question": "Can you certify that our construction site complies with every applicable regulation?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "compliance_certification",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_091",
+      "question": "What is the safe operating speed for a grinder with no make or model supplied?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "equipment_specification",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_092",
+      "question": "How much weight can this unidentified lifting sling safely carry?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "equipment_specification",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_093",
+      "question": "What are the emergency contact numbers for the site where I work?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "missing_evidence",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_094",
+      "question": "What exact first-aid treatment should be used for a worker with symptoms after an unknown exposure?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "medical_hazard",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_095",
+      "question": "Which cartridge and change-out schedule should be used for xylene at 50 ppm in a poorly ventilated room?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "respirator_selection",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_096",
+      "question": "What are the local construction permit requirements for a project in Pune this month?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "legal_current",
+      "split": "holdout",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_097",
+      "question": "Is a specific worker medically fit to use a respirator?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "medical_hazard",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_098",
+      "question": "What exact isolation sequence is required for a hydraulic press made by an unspecified manufacturer?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "machine_specific",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_099",
+      "question": "Can you tell me whether this uninspected ladder is safe to climb?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "missing_evidence",
+      "split": "development",
+      "ground_truth_note": ""
+    },
+    {
+      "id": "rw_100",
+      "question": "What is the manufacturer-approved maintenance interval for our unlisted aerial lift?",
+      "expected_pages": [],
+      "should_abstain": true,
+      "must_contain": [],
+      "category": "equipment_specification",
+      "split": "development",
+      "ground_truth_note": ""
+    }
+  ]
+}
