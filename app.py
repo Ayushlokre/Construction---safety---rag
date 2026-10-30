@@ -4,6 +4,8 @@ import logging
 import re
 import streamlit as st
 import chat as rag
+import upload_rag
+from visual_routes import known_source_visual_pages
 
 LOGGER = logging.getLogger("osha_rag.streamlit")
 
@@ -97,13 +99,21 @@ def render_requested_source_pages(prompt: str, answer: str):
         if key in seen:
             continue
         seen.add(key)
+        uploaded_source = (
+            key[0] == st.session_state.get("uploaded_filename")
+            and st.session_state.get("uploaded_bytes") is not None
+        )
         pdf_path = data_dir / key[0]
-        if not pdf_path.is_file():
+        if not uploaded_source and not pdf_path.is_file():
             st.warning(f"Source PDF not found locally: {key[0]}")
             continue
 
         try:
-            with pymupdf.open(pdf_path) as pdf:
+            pdf_source = (
+                pymupdf.open(stream=st.session_state.uploaded_bytes, filetype="pdf")
+                if uploaded_source else pymupdf.open(pdf_path)
+            )
+            with pdf_source as pdf:
                 page_index = key[1] - 1
                 if page_index < 0 or page_index >= pdf.page_count:
                     st.warning(
@@ -149,7 +159,7 @@ st.markdown(
     """
     <style>
     :root { --osha-orange: #f28c28; --osha-blue: #3b82f6; }
-    .block-container { max-width: 1420px; padding-top: 1.6rem; padding-bottom: 6rem; }
+    .block-container { max-width: 1280px; padding-top: 3rem; padding-bottom: 6rem; }
     [data-testid="stSidebar"] { border-right: 1px solid rgba(148,163,184,.18); }
     [data-testid="stSidebar"] .block-container { padding-top: 1.4rem; }
     .osha-hero {
@@ -159,7 +169,8 @@ st.markdown(
     }
     .osha-kicker { color: #f2a65a; text-transform: uppercase; letter-spacing: .13em;
         font-size: .72rem; font-weight: 750; margin-bottom: .45rem; }
-    .osha-title { font-size: clamp(1.65rem, 3vw, 2.45rem); line-height: 1.12;
+    .osha-title { display: block; overflow: visible; padding: .12em 0 .18em;
+        font-size: clamp(1.65rem, 3vw, 2.45rem); line-height: 1.28;
         font-weight: 800; margin: 0; }
     .osha-subtitle { color: var(--text-color); opacity: .76; margin-top: .55rem; font-size: .96rem; }
     .osha-stat {
@@ -195,6 +206,21 @@ if "pending_prompt" not in st.session_state:
     st.session_state.pending_prompt = None
 if "answer_cache" not in st.session_state:
     st.session_state.answer_cache = {}
+if "uploaded_client" not in st.session_state:
+    st.session_state.uploaded_client = None
+if "uploaded_collection" not in st.session_state:
+    st.session_state.uploaded_collection = None
+if "uploaded_filename" not in st.session_state:
+    st.session_state.uploaded_filename = None
+if "uploaded_bytes" not in st.session_state:
+    st.session_state.uploaded_bytes = None
+if "uploaded_chunk_count" not in st.session_state:
+    st.session_state.uploaded_chunk_count = 0
+if "pending_upload_source_select" not in st.session_state:
+    st.session_state.pending_upload_source_select = False
+if st.session_state.pending_upload_source_select:
+    st.session_state.question_source = "Uploaded construction PDF"
+    st.session_state.pending_upload_source_select = False
 
 # Load the persistent collection once. This is read-only; this UI never ingests or rebuilds it.
 try:
@@ -208,10 +234,18 @@ except Exception as exc:
 
 with st.sidebar:
     st.markdown("## 🦺 OSHA Safety")
-    st.caption("Local document intelligence")
-    st.divider()
+    st.caption("Construction safety assistant")
 
-    st.markdown("**KNOWLEDGE BASE**")
+    # Keep this action at the very top of the sidebar so it remains visible
+    # even when an uploaded-document panel makes the sidebar scroll.
+    if st.button("Clear conversation", use_container_width=True, key="clear_conversation_sidebar"):
+        st.session_state.messages = []
+        st.session_state.pending_prompt = None
+        st.session_state.answer_cache = {}
+        st.rerun()
+
+    st.divider()
+    st.markdown("**Your documents**")
     st.markdown(
         """
         <div class="osha-note">
@@ -221,37 +255,42 @@ with st.sidebar:
         """,
         unsafe_allow_html=True,
     )
-    st.markdown("**LOCAL MODELS**")
-    st.code(f"Embedding  {rag.EMBED_MODEL}\nAnswer     {rag.LLM_MODEL}", language="text")
 
-    if collection_error is None:
-        st.success(f"Knowledge base ready · {chunk_count:,} chunks")
-    else:
-        st.error("Knowledge base unavailable")
-        st.caption(str(collection_error))
-
-    st.markdown("**RETRIEVAL PIPELINE**")
-    st.markdown(
-        """
-        <div class="osha-note">
-        ✓ Vector search + BM25<br>
-        ✓ Reciprocal-rank fusion<br>
-        ✓ Page-aware evidence context<br>
-        ✓ Citation validation
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
     st.divider()
-    st.caption(
-        "For document Q&A support only. This assistant does not replace applicable "
-        "OSHA standards, site-specific procedures, or a qualified safety professional."
+    st.markdown("**Upload a construction PDF**")
+    st.caption("Attach a PDF using the paperclip in the chat box.")
+    if st.session_state.uploaded_collection is not None:
+        st.success(f"Using: {st.session_state.uploaded_filename}")
+        if st.button("Remove uploaded document", use_container_width=True):
+            # Delete this session's in-memory collection when the user removes it.
+            try:
+                if st.session_state.uploaded_client is not None and st.session_state.uploaded_collection is not None:
+                    st.session_state.uploaded_client.delete_collection(
+                        name=st.session_state.uploaded_collection.name
+                    )
+            except Exception:
+                LOGGER.exception("Could not delete the temporary upload collection")
+            st.session_state.question_source = "Original OSHA knowledge base"
+            st.session_state.uploaded_client = None
+            st.session_state.uploaded_collection = None
+            st.session_state.uploaded_filename = None
+            st.session_state.uploaded_bytes = None
+            st.session_state.uploaded_chunk_count = 0
+            st.session_state.answer_cache = {}
+            st.rerun()
+
+    st.divider()
+    st.markdown("**Answer questions from**")
+    source_options = ["Original OSHA knowledge base"]
+    if st.session_state.uploaded_collection is not None:
+        source_options.append("Uploaded construction PDF")
+    st.radio(
+        "Choose document source",
+        source_options,
+        key="question_source",
+        label_visibility="collapsed",
     )
-    if st.button("＋ New conversation", use_container_width=True, type="primary"):
-        st.session_state.messages = []
-        st.session_state.pending_prompt = None
-        st.session_state.answer_cache = {}
-        st.rerun()
+
 
 if collection_error is not None:
     st.error(f"Could not load the OSHA knowledge base: {collection_error}")
@@ -261,38 +300,22 @@ if collection_error is not None:
     )
     st.stop()
 
-# Main hero
+# Simple, task-focused header
 st.markdown(
     """
     <div class="osha-hero">
-      <div class="osha-kicker">LOCAL · PRIVATE · SOURCE-GROUNDED</div>
-      <h1 class="osha-title">OSHA Safety Intelligence Assistant</h1>
+      <div class="osha-kicker">OSHA DOCUMENT ASSISTANT</div>
+      <h1 class="osha-title">How can I help with construction safety?</h1>
       <div class="osha-subtitle">
-        Ask questions across two OSHA publications. Get concise answers grounded
-        in retrieved passages, with PDF page citations and evidence-based refusals.
+        Ask about hazards, job hazard analysis, safety controls, or your uploaded construction document.
       </div>
     </div>
     """,
     unsafe_allow_html=True,
 )
 
-metric_cols = st.columns(4)
-stats = [
-    ("DOCUMENTS", "02 indexed PDFs"),
-    ("KNOWLEDGE BASE", f"{chunk_count:,} chunks"),
-    ("RETRIEVAL", "Hybrid · Vector + BM25"),
-    ("ANSWER MODEL", rag.LLM_MODEL),
-]
-for col, (label, value) in zip(metric_cols, stats):
-    with col:
-        st.markdown(
-            f'<div class="osha-stat"><div class="osha-stat-label">{label}</div>'
-            f'<div class="osha-stat-value">{value}</div></div>',
-            unsafe_allow_html=True,
-        )
-
 st.markdown('<div class="osha-section">Start with a suggested question</div>', unsafe_allow_html=True)
-st.caption("Choose a common question or enter your own below.")
+st.caption("Choose a question to get started, or type your own below.")
 suggestions = [
     "What is a Job Hazard Analysis (JHA), and why is it important?",
     "What are the five questions to ask when conducting a JHA?",
@@ -300,6 +323,8 @@ suggestions = [
     "What are the seven core elements of a construction safety and health program?",
     "How should chemical exposure hazards be controlled?",
     "Compare the purpose of the two OSHA documents.",
+    "Show me the Hierarchy of Controls diagram from OSHA 3886.",
+    "Show me the Common Hazards and Descriptions table from OSHA 3071.",
 ]
 with st.container(border=True):
     suggestion_cols = st.columns(2, gap="medium")
@@ -310,68 +335,124 @@ with st.container(border=True):
             st.session_state.pending_prompt = suggestion
             st.rerun()
 
+# Render the full conversation from saved session state.
 if st.session_state.messages:
     st.markdown('<div class="osha-section">Conversation</div>', unsafe_allow_html=True)
-    for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
-            if message["role"] == "assistant":
-                render_answer(message["content"], image_only=bool(message.get("image_only", False)))
-                original_prompt = message.get("prompt", "")
-                if original_prompt:
-                    render_requested_source_pages(original_prompt, message["content"])
-            else:
-                st.markdown(message["content"])
+    with st.container(height=520, border=False):
+        for message in st.session_state.messages:
+            with st.chat_message(message["role"]):
+                if message["role"] == "assistant":
+                    render_answer(message["content"], image_only=bool(message.get("image_only", False)))
+                    original_prompt = message.get("prompt", "")
+                    if original_prompt:
+                        render_requested_source_pages(original_prompt, message["content"])
+                else:
+                    st.markdown(message["content"])
 else:
     st.markdown(
         """
         <div class="osha-note" style="padding:.6rem .1rem 1rem">
-        <b>Good questions to ask:</b> definitions, hazard identification, JHA steps,
-        documented controls, construction safety program elements, and comparisons
-        supported by the two indexed publications.
+        <b>Try asking about:</b> workplace hazards, excavation, scaffolding, lifting,
+        job hazard analysis, or safety controls.
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-typed_prompt = st.chat_input("Ask about a hazard, JHA step, control, or OSHA document...")
+chat_submission = st.chat_input(
+    "Ask a question or attach a construction PDF...",
+    accept_file=True,
+    file_type=["pdf"],
+)
+
+attached_files = []
+if isinstance(chat_submission, dict):
+    # Compatibility with Streamlit versions returning a dict-like payload.
+    typed_prompt = (chat_submission.get("text") or "").strip()
+    attached_files = chat_submission.get("files") or []
+elif hasattr(chat_submission, "text"):
+    # Current Streamlit returns a ChatInputValue object when accept_file=True.
+    typed_prompt = (chat_submission.text or "").strip()
+    attached_files = chat_submission.files or []
+else:
+    # Text-only submission on older Streamlit versions.
+    typed_prompt = (chat_submission or "").strip()
+
+# Process an attached PDF before answering any accompanying question.
+if attached_files:
+    if len(attached_files) > 1:
+        st.error("Please attach one construction PDF at a time.")
+    else:
+        attached_pdf = attached_files[0]
+        try:
+            file_bytes = attached_pdf.getvalue()
+            with st.spinner("Checking construction relevance and indexing PDF pages..."):
+                client, upload_collection, upload_chunks, message = upload_rag.create_session_collection(
+                    attached_pdf.name, file_bytes, rag.EMBED_MODEL
+                )
+            st.session_state.uploaded_client = client
+            st.session_state.uploaded_collection = upload_collection
+            st.session_state.uploaded_filename = attached_pdf.name
+            st.session_state.uploaded_bytes = file_bytes
+            st.session_state.uploaded_chunk_count = upload_chunks
+            st.session_state.pending_upload_source_select = True
+            st.session_state.answer_cache = {}
+            st.success(f"{message} Indexed {upload_chunks} chunks. The uploaded PDF is selected for this question and will remain selected.")
+            if not typed_prompt:
+                st.rerun()
+        except Exception as exc:
+            st.error(str(exc))
+            typed_prompt = None
+
 prompt = st.session_state.pending_prompt or typed_prompt
 if prompt:
     st.session_state.pending_prompt = None
+    use_uploaded_for_this_prompt = bool(attached_files) and st.session_state.uploaded_collection is not None
+    source_is_uploaded = (
+        use_uploaded_for_this_prompt
+        or st.session_state.get("question_source") == "Uploaded construction PDF"
+    )
     st.session_state.messages.append({"role": "user", "content": prompt})
-    with st.chat_message("user"):
-        st.markdown(prompt)
 
-    with st.chat_message("assistant"):
-        cache_key = question_cache_key(prompt)
-        cached_answer = st.session_state.answer_cache.get(cache_key) if cache_key else None
+    cache_source = "Uploaded construction PDF" if source_is_uploaded else "Original OSHA knowledge base"
+    cache_key = f"{cache_source}::{question_cache_key(prompt)}"
+    answer = st.session_state.answer_cache.get(cache_key) if cache_key else None
 
-        if cached_answer:
-            answer = cached_answer
-            st.caption("Reusing the previously verified answer for this exact question.")
-        else:
-            with st.spinner("Searching OSHA passages and checking the supporting evidence..."):
-                try:
+    if answer is None:
+        with st.spinner("Checking the document and preparing an answer..."):
+            try:
+                visual_route = known_source_visual_pages(prompt) if not source_is_uploaded else None
+                if visual_route:
+                    citations = " ".join(
+                        f"[Source: {visual_route['source']}, PDF page {page}]"
+                        for page in visual_route["pages"]
+                    )
+                    answer = f"Here is the original {visual_route['title']} from {visual_route['source']}. {citations}"
+                elif source_is_uploaded and st.session_state.uploaded_collection is not None:
+                    if rag.is_greeting(prompt):
+                        answer = rag.greeting_response(prompt)
+                    else:
+                        context = upload_rag.retrieve_uploaded_context(
+                            prompt, st.session_state.uploaded_collection, rag.EMBED_MODEL
+                        )
+                        answer = upload_rag.answer_uploaded_question(prompt, context, rag.LLM_MODEL)
+                else:
                     context = rag.retrieve_documents(prompt, collection)
                     answer = rag.generate_answer(prompt, context)
-                except Exception as exc:
-                    LOGGER.exception("Streamlit question handling failed")
-                    answer = (
-                        "I couldn't complete the request. Check that Ollama is running "
-                        "and see `logs/rag.log` for details.\n\n"
-                        f"Technical detail: `{exc}`"
-                    )
-
-            # Cache only completed responses, never transient runtime failures.
-            if cache_key and not answer.startswith("I couldn't complete the request"):
-                st.session_state.answer_cache[cache_key] = answer
-
-        image_only = is_image_only_request(prompt)
-        render_answer(answer, image_only=image_only)
-        render_requested_source_pages(prompt, answer)
+            except Exception as exc:
+                LOGGER.exception("Streamlit question handling failed")
+                answer = (
+                    "I couldn't complete the request. Check that Ollama is running "
+                    "and see `logs/rag.log` for details.\n\n"
+                    f"Technical detail: `{exc}`"
+                )
+        if cache_key and not answer.startswith("I couldn't complete the request"):
+            st.session_state.answer_cache[cache_key] = answer
 
     st.session_state.messages.append({
         "role": "assistant",
         "content": answer,
         "prompt": prompt,
-        "image_only": image_only,
+        "image_only": is_image_only_request(prompt),
     })
+    st.rerun()
