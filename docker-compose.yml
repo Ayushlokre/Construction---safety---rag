@@ -1,0 +1,34 @@
+
+services:
+  api:
+    build: .
+    container_name: osha-rag-api
+    environment:
+      OLLAMA_HOST: http://host.docker.internal:11434
+      RAG_DB_DIR: /app/chroma_db_docker_api
+      RAG_RERANKER_ENABLED: "false"
+      RAG_LOG_LEVEL: INFO
+    volumes:
+      - ./chroma_db_docker_api:/app/chroma_db_docker_api
+      - ./logs:/app/logs
+      - ./data:/app/data:ro
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+  streamlit:
+    build: .
+    container_name: osha-rag-streamlit
+    command: ["streamlit", "run", "app.py", "--server.address=0.0.0.0", "--server.port=8501"]
+    environment:
+      OLLAMA_HOST: http://host.docker.internal:11434
+      RAG_DB_DIR: /app/chroma_db_docker_ui
+      RAG_RERANKER_ENABLED: "false"
+      RAG_LOG_LEVEL: INFO
+    volumes:
+      - ./chroma_db_docker_ui:/app/chroma_db_docker_ui
+      - ./logs:/app/logs
+      - ./data:/app/data:ro
+    ports:
+      - "8501:8501"
+    restart: unless-stopped

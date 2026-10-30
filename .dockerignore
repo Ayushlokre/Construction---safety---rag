@@ -1,0 +1,15 @@
+
+.venv/
+__pycache__/
+.git/
+.env
+*.py[cod]
+*.backup*
+logs/
+chroma_db/
+chroma_db_docker_api/
+chroma_db_docker_ui/
+evaluation_results*
+*_results.json
+*_results.csv
+*.pdf

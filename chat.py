@@ -18,7 +18,7 @@ from page_context import expand_page_boundary_items
 # ============================================================
 
 BASE_DIR = Path(__file__).resolve().parent
-DB_DIR = BASE_DIR / "chroma_db"
+DB_DIR = Path(os.getenv("RAG_DB_DIR", str(BASE_DIR / "chroma_db")))
 
 EMBED_MODEL = os.getenv("RAG_EMBED_MODEL", "nomic-embed-text")
 LLM_MODEL = os.getenv("RAG_LLM_MODEL", "llama3.2")
